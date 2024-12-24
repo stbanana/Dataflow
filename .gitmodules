@@ -1,0 +1,3 @@
+[submodule "Example/stm32H743/stm32h7xx-hal-driver"]
+	path = Example/stm32H743/stm32h7xx-hal-driver
+	url = https://github.com/STMicroelectronics/stm32h7xx-hal-driver.git
