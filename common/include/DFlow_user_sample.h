@@ -8,7 +8,6 @@
 
 //-------- <<< Use Configuration Wizard in Context Menu >>> -----------------
 
-// <e> 是否支持DMA流接管
 // <o> 是否支持DMA流接管
 //   <0=> 不支持DMA流功能
 //   <1=> 启用DMA流支持

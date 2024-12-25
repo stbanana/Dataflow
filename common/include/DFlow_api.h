@@ -33,12 +33,6 @@ extern "C"
 
 /* Exported types ------------------------------------------------------------*/
 
-typedef enum
-{
-    DFLOW_IDLE, // 在空闲中断 支持DMA接收
-    DFLOW_TC,   // 在发送完成中断 支持DMA发送
-} _DFLOW_INT;
-
 /**
  * @brief modbus通信发送接收函数的配置
  * 主机、从机的定义共用
@@ -100,8 +94,8 @@ typedef struct _DFlow
 /* Exported functions ---------------------------------------------------------*/
 
 /***** 用户实用API *****/
-extern void DFlow_Ticks(_DFlow *df);
-extern void DFlow_Init(_DFlow *df, void *AllBuffer, uint32_t TBufferLen, uint32_t RBufferLen, _DFLOW_COMMON_FUNCTION *Func);
+extern void     DFlow_Ticks(_DFlow *df);
+extern uint32_t DFlow_Init(_DFlow *df, void *AllBuffer, uint32_t TBufferLen, uint32_t RBufferLen, _DFLOW_COMMON_FUNCTION *Func);
 
 /**/
 extern uint32_t DFlow_Write(_DFlow *df, uint8_t *pcBuf, uint32_t ui32Len);
@@ -109,7 +103,8 @@ extern uint32_t DFlow_Writec(_DFlow *df, uint8_t data);
 extern uint32_t DFlow_Getc(_DFlow *df, uint8_t *data_rx);
 
 /***** 自行插入中断处理 *****/
-extern void DFlow_Interrupt(_DFlow *df, _DFLOW_INT interrupt);
+extern void DFlow_Interrupt_IDLE(_DFlow *df, uint16_t Size);
+extern void DFlow_Interrupt_TC(_DFlow *df);
 
 /* Include DFlow utility and system file.  */
 #include "DFlow_utility.h"

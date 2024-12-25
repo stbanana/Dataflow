@@ -34,15 +34,15 @@ uint32_t DFlow_Write(_DFlow *df, uint8_t *pcBuf, uint32_t ui32Len)
 {
     /* 依据发送ABbuffer，注册变量 */
     uint8_t  *pSBuffer;
-    uint32_t *pSBufferLen;
+    uint16_t *pSBufferLen;
     if(df->SendAB |= 0x1)
     {
-        pSBuffer    = df->TxExist.BufferA;
+        pSBuffer    = (uint8_t *)df->TxExist.BufferA;
         pSBufferLen = &df->TxExist.LenA;
     }
     else if(df->SendAB |= 0x2)
     {
-        pSBuffer    = df->TxExist.BufferB;
+        pSBuffer    = (uint8_t *)df->TxExist.BufferB;
         pSBufferLen = &df->TxExist.LenB;
     }
 

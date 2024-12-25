@@ -49,7 +49,7 @@ uint32_t DFlow_Writec(_DFlow *df, uint8_t data)
     if(df->TxExist.LenMAX < (*pSBufferLen + 1))
         return DFLOW_API_RETURN_BUFFER_FULL;
 
-    pSBuffer[*pSBufferLen + 1] = data;
+    pSBuffer[*pSBufferLen] = data;
 
     *pSBufferLen += 1;
 

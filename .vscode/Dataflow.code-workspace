@@ -16,31 +16,33 @@
         "version": "0.2.0",
         "configurations": [
             {
-                "name": "gcc build_test",
-                "type": "cppdbg",
+                "cwd": "${workspaceRoot}",
+                "executable": "./build/H7_GCC_example.elf",
+                "name": "Debug with JLink",
                 "request": "launch",
-                "program": "${fileDirname}\\${fileBasenameNoExtension}.exe",
-                "args": [],
-                "stopAtEntry": true,
-                "cwd": "${fileDirname}",
-                "environment": [],
-                "externalConsole": false,
-                "MIMode": "gdb",
-                "miDebuggerPath": "C:\\111_APPS\\MSYS2\\mingw64\\bin\\gdb.exe",
-                "setupCommands": [
-                    {
-                        "description": "为 gdb 启用整齐打印",
-                        "text": "-enable-pretty-printing",
-                        "ignoreFailures": true
-                    },
-                    {
-                        "description": "将反汇编风格设置为 Intel",
-                        "text": "-gdb-set disassembly-flavor intel",
-                        "ignoreFailures": true
-                    }
-                ],
-                "preLaunchTask": "gcc build_test"
-            }
-        ]
+                "type": "cortex-debug",
+                "device": "STM32H743II",
+                // "runToEntryPoint": "Reset_Handler",
+                "runToEntryPoint": "main",
+                "showDevDebugOutput": "none",
+                "servertype": "jlink",
+                "interface": "swd",
+                // "svdFile": "../5_PhysicalChip/CPU/STM32H743.svd",
+                "liveWatch": {
+                    "enabled": true,
+                    "samplesPerSecond": 4
+                },
+                "rttConfig": {
+                    "enabled": true,
+                    "address": "auto",
+                    "decoders": [
+                        {
+                            "label": "",
+                            "port": 0,
+                            "type": "console"
+                        }
+                    ]
+                },
+            ]
+        }
     }
-}

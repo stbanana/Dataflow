@@ -37,6 +37,27 @@ extern void Error_Handler(void);
  */
 void InitCpu(void)
 {
+    uint32_t i = 0;
+    __set_PRIMASK(1); // 关闭全局中断
+
+    /* 关闭滴答定时器，复位到默认值 */
+    SysTick->CTRL = 0;
+    SysTick->LOAD = 0;
+    SysTick->VAL  = 0;
+
+    /* 关闭所有中断，清除所有中断挂起标志 */
+    for(i = 0; i < 8; i++)
+    {
+        NVIC->ICER[i] = 0xFFFFFFFF;
+        NVIC->ICPR[i] = 0xFFFFFFFF;
+    }
+
+    /* 设置中断向量表偏移量 */
+    SCB->VTOR &= 0xFFF00000;
+    SCB->VTOR |= 0x00000000;
+
+    __set_PRIMASK(0); // 打开全局中断
+
     MPU_Region_InitTypeDef MPU_InitStruct;
 
     /* 禁止 MPU */
@@ -214,6 +235,9 @@ void DmaInit(void)
     /* DMA1_Stream0_IRQn interrupt configuration */
     HAL_NVIC_SetPriority(DMA1_Stream0_IRQn, 0, 0);
     HAL_NVIC_EnableIRQ(DMA1_Stream0_IRQn);
+    /* DMA1_Stream1_IRQn interrupt configuration */
+    HAL_NVIC_SetPriority(DMA1_Stream1_IRQn, 0, 0);
+    HAL_NVIC_EnableIRQ(DMA1_Stream1_IRQn);
 }
 
 /**
@@ -375,4 +399,25 @@ void HAL_UART_MspDeInit(UART_HandleTypeDef *uartHandle)
 
         /* USER CODE END UART4_MspDeInit 1 */
     }
+}
+
+/**
+ * @brief GPIO初始化
+ * @param  
+ */
+void GpioInit(void)
+{
+    GPIO_InitTypeDef GPIO_InitStruct = {0};
+    __HAL_RCC_GPIOD_CLK_ENABLE( );
+
+    HAL_GPIO_WritePin(GPIOD, GPIO_PIN_8, GPIO_PIN_RESET);
+
+    /*Configure GPIO pin : PD8 */
+    GPIO_InitStruct.Pin   = GPIO_PIN_8;
+    GPIO_InitStruct.Mode  = GPIO_MODE_OUTPUT_PP;
+    GPIO_InitStruct.Pull  = GPIO_NOPULL;
+    GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
+    HAL_GPIO_Init(GPIOD, &GPIO_InitStruct);
+
+    HAL_GPIO_WritePin(GPIOD, GPIO_PIN_8, GPIO_PIN_SET);
 }

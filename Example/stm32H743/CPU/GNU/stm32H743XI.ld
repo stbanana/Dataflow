@@ -11,7 +11,7 @@ _Min_Stack_Size = 0x400; /* 预设最小堆空间 */
 /* 指定存储器区域 */
 MEMORY
 {
-    FLASH (rx)     : ORIGIN = 0x08020000, LENGTH = 0x00200000   /* 最大 2048K  内部FLASH 首地址 0x8000 0000 大小 2048K*/
+    FLASH (rx)     : ORIGIN = 0x08000000, LENGTH = 0x00200000   /* 最大 2048K  内部FLASH 首地址 0x8000 0000 大小 2048K*/
 
     RAM_BLFlag(xrw): ORIGIN = 0x20000000, LENGTH = 0x04         /* 与bootload程序共通的内存 */
     DTCMRAM (xrw)  : ORIGIN = 0x20000004, LENGTH = 0x0001FFFC   /* 最大 128K DTCM 首地址 0x2000 0000 大小 128K*/

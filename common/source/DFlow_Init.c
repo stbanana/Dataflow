@@ -34,8 +34,9 @@
  * @param TBufferLen 单个TxBuffer的长度
  * @param RBufferLen 单个RxBuffer的长度
  * @param Func 回调函数集合指针
+ * @return 标准返回
  */
-void DFlow_Init(_DFlow *df, void *AllBuffer, uint32_t TBufferLen, uint32_t RBufferLen, _DFLOW_COMMON_FUNCTION *Func)
+uint32_t DFlow_Init(_DFlow *df, void *AllBuffer, uint32_t TBufferLen, uint32_t RBufferLen, _DFLOW_COMMON_FUNCTION *Func)
 {
     void *dist = AllBuffer;
 
@@ -73,8 +74,10 @@ void DFlow_Init(_DFlow *df, void *AllBuffer, uint32_t TBufferLen, uint32_t RBuff
 
     df->RxExist.LenMAX = RBufferLen;
 
-    if(df->Func->Receive(df->RxExist.Buffer, df->RxExist.LenMAX) == DFLOW_PORT_RETURN_DEFAULT)
+    if(df->Func->Receive((void *)df->RxExist.Buffer, df->RxExist.LenMAX) != DFLOW_PORT_RETURN_DEFAULT)
     {
         DFlowStateSwitch(df, 3);
     }
+
+    return DFLOW_API_RETURN_DEFAULT;
 }
