@@ -33,16 +33,16 @@
 void DFlow_Ticks(_DFlow *df)
 {
     /* 依据发送ABbuffer，注册变量 */
-    uint8_t  *pSBuffer;
-    uint16_t *pSBufferLen;
+    volatile uint8_t *pSBuffer;
+    uint16_t         *pSBufferLen;
     if(df->SendAB |= 0x1)
     {
-        pSBuffer    = (uint8_t *)df->TxExist.BufferA;
+        pSBuffer    = df->TxExist.BufferA;
         pSBufferLen = &df->TxExist.LenA;
     }
     else if(df->SendAB |= 0x2)
     {
-        pSBuffer    = (uint8_t *)df->TxExist.BufferB;
+        pSBuffer    = df->TxExist.BufferB;
         pSBufferLen = &df->TxExist.LenB;
     }
 
@@ -65,7 +65,7 @@ void DFlow_Ticks(_DFlow *df)
         case 2:
             break;
         case 3:
-            df->Func->Receive((void *)df->RxExist.Buffer, df->RxExist.LenMAX);
+            df->Func->Receive((volatile void *)df->RxExist.Buffer, df->RxExist.LenMAX);
             DFlowStateSwitch(df, 0);
             return;
         default:

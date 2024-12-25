@@ -186,7 +186,7 @@ void SystemInit(void)
 #endif /* DATA_IN_D2_SRAM */
 
 /* FPU settings ------------------------------------------------------------*/
-#if(__FPU_PRESENT == 1) && (__FPU_USED == 1)
+#if (__FPU_PRESENT == 1) && (__FPU_USED == 1)
     SCB->CPACR |= ((3UL << (10 * 2)) | (3UL << (11 * 2))); /* set CP10 and CP11 Full Access */
 #endif
     /* Reset the RCC clock configuration to the default reset state ------------*/
@@ -261,7 +261,7 @@ void SystemInit(void)
     /* Disable all interrupts */
     RCC->CIER = 0x00000000;
 
-#if(STM32H7_DEV_ID == 0x450UL)
+#if (STM32H7_DEV_ID == 0x450UL)
     /* dual core CM7 or single core line */
     if((DBGMCU->IDCODE & 0xFFFF0000U) < 0x20000000U)
     {

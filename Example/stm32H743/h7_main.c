@@ -46,8 +46,8 @@ extern void GpioInit(void);
 void DataflowTest(void);
 
 /* 库port示例 */
-uint32_t Transmit485(void *Data, size_t Len);
-uint32_t Receive485(void *Data, size_t Len);
+uint32_t Transmit485(volatile void *Data, size_t Len);
+uint32_t Receive485(volatile void *Data, size_t Len);
 uint32_t TransmitGetState485(void);
 void     SendBefor485(void);
 void     SendOver485(void);
@@ -122,17 +122,17 @@ void DataflowTest(void)
 
 /**** 一些port函数的编写示例 ****/
 
-uint32_t Transmit485(void *Data, size_t Len)
+uint32_t Transmit485(volatile void *Data, size_t Len)
 {
-    SCB_CleanDCache_by_Addr((uint32_t *)Data, Len);         // DMA发送前解决发送内存区 缓存一致性
-    if(HAL_UART_Transmit_DMA(&huart4, Data, Len) != HAL_OK) // 尝试开启传输DMA通道
+    SCB_CleanDCache_by_Addr((uint32_t *)Data, Len);                          // DMA发送前解决发送内存区 缓存一致性
+    if(HAL_UART_Transmit_DMA(&huart4, (const uint8_t *)Data, Len) != HAL_OK) // 尝试开启传输DMA通道
         return DFLOW_PORT_RETURNT_ERR_INDEFINITE;
     return DFLOW_PORT_RETURN_DEFAULT;
 }
 
-uint32_t Receive485(void *Data, size_t Len)
+uint32_t Receive485(volatile void *Data, size_t Len)
 {
-    if(HAL_UARTEx_ReceiveToIdle_DMA(&huart4, Data, Len) != HAL_OK) // 尝试开启接收DMA通道
+    if(HAL_UARTEx_ReceiveToIdle_DMA(&huart4, (uint8_t *)Data, Len) != HAL_OK) // 尝试开启接收DMA通道
         return DFLOW_PORT_RETURNT_ERR_INDEFINITE;
     return DFLOW_PORT_RETURN_DEFAULT;
 }
@@ -187,7 +187,10 @@ void HAL_UARTEx_RxEventCallback(UART_HandleTypeDef *huart, uint16_t Size)
         switch(huart->RxEventType)
         {
         case HAL_UART_RXEVENT_IDLE:
-            DFlow_Interrupt_IDLE(&DFlow, Size);
+            DFlow_Interrupt_IDLE_RC(&DFlow, Size);
+            break;
+        case HAL_UART_RXEVENT_TC: // 接收通道结束，程序运行不应当进入此分支，表明接收buffer已经不够大了
+            DFlow_Interrupt_IDLE_RC(&DFlow, Size);
             break;
 
         default:

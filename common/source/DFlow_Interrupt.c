@@ -27,11 +27,11 @@
 /* Private functions ---------------------------------------------------------*/
 
 /**
- * @brief 在 IDLE(空闲中断) 的中断分支调用此函数
+ * @brief 在 IDLE(空闲中断) 和 RC(接收通道结束) 的中断分支调用此函数
  * @param df Dataflow对象指针
  * @param Size 可用的读数据字节数
  */
-void DFlow_Interrupt_IDLE(_DFlow *df, uint16_t Size)
+void DFlow_Interrupt_IDLE_RC(_DFlow *df, uint16_t Size)
 {
     df->RxExist.Len = Size;
     while(df->RxExist.Len > 0)
@@ -40,7 +40,7 @@ void DFlow_Interrupt_IDLE(_DFlow *df, uint16_t Size)
         df->RxExist.UserRxWriteIndex                           = (df->RxExist.UserRxWriteIndex + 1) % df->RxExist.LenMAX;
         df->RxExist.Len--;
     }
-    if(df->Func->Receive((void *)df->RxExist.Buffer, df->RxExist.LenMAX) == DFLOW_PORT_RETURN_DEFAULT)
+    if(df->Func->Receive((volatile void *)df->RxExist.Buffer, df->RxExist.LenMAX) == DFLOW_PORT_RETURN_DEFAULT)
     {
         DFlowStateSwitch(df, 3);
     }

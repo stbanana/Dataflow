@@ -74,7 +74,7 @@ uint32_t DFlow_Init(_DFlow *df, void *AllBuffer, uint32_t TBufferLen, uint32_t R
 
     df->RxExist.LenMAX = RBufferLen;
 
-    if(df->Func->Receive((void *)df->RxExist.Buffer, df->RxExist.LenMAX) != DFLOW_PORT_RETURN_DEFAULT)
+    if(df->Func->Receive((volatile void *)df->RxExist.Buffer, df->RxExist.LenMAX) != DFLOW_PORT_RETURN_DEFAULT)
     {
         DFlowStateSwitch(df, 3);
     }

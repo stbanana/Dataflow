@@ -39,9 +39,9 @@ extern "C"
  */
 typedef struct
 {
-    uint32_t (*Transmit)(void *Data, size_t Len); // 数据开启发送通道函数绑定
-    uint32_t (*Receive)(void *Data, size_t Len);  // 数据开启接收通道函数绑定
-    uint32_t (*TransmitGetState)(void);           // 获得发送通道状态函数绑定
+    uint32_t (*Transmit)(volatile void *Data, size_t Len); // 数据开启发送通道函数绑定
+    uint32_t (*Receive)(volatile void *Data, size_t Len);  // 数据开启接收通道函数绑定
+    uint32_t (*TransmitGetState)(void);                    // 获得发送通道状态函数绑定
     /* 额外的回调函数处理，通常用于485切换模式，或者IC的en口控制
         这部分绑定为 NULL 将裁剪回调部分处理 */
     void (*SendBefor)(void); // 开始发送之前的回调函数指针（主要用于RS485切换到发送模式）
@@ -103,7 +103,7 @@ extern uint32_t DFlow_Writec(_DFlow *df, uint8_t data);
 extern uint32_t DFlow_Getc(_DFlow *df, uint8_t *data_rx);
 
 /***** 自行插入中断处理 *****/
-extern void DFlow_Interrupt_IDLE(_DFlow *df, uint16_t Size);
+extern void DFlow_Interrupt_IDLE_RC(_DFlow *df, uint16_t Size);
 extern void DFlow_Interrupt_TC(_DFlow *df);
 
 /* Include DFlow utility and system file.  */

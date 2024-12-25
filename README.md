@@ -47,16 +47,78 @@ DMA 接收是非常简单且易用的，但是发送的设计却比较复杂，�
 
 或许更多人叫乒乓 buffer，我只是不喜欢这个叫法。
 
-另外如果是带有 D-Cache 的 MCU 需要特别注意缓存一致性的问题，偶尔可能需要自己解决一下，可以参考例程中的方法。
+另外如果是带有 D-Cache 的 MCU 需要特别注意缓存一致性的问题，偶尔可能需要自己解决一下，可以参考例程中的方法。本库已经尽量使用 volatile 进行修饰，但是 hal 库对于 DMA 以及 Cache 仍然没有很好的处理。
 
 那么发送是否也可以使用这样的做法呢？反正同时只能有一个 buffer 挂在 DMA 通道上。
 
 ### 半双工的问题
 通常半双工通道需要**数十纳秒**到**数微秒**切换收发方向，1毫秒的延迟是必然稳健的。
 
-半双工的通信与 DMA 其实是有相似性的，都需要将杂乱而来的数据，建立一段通道进行传输。
+半双工的通信与 DMA 其实是有相似性的，都需要将杂乱而来的数据集合起来，建立一段通道统一进行传输。所以将通信分两步进行是合适的。
 
 而我认为使用半双工的场景。对于通信延迟或许就不在意了，重要的是稳健可靠的信息。例如我使用的 AMD2587 IC 发送机切换需要 2.5 μs，且在跑 modbusRTU ，这种使用场景下使用定时器进行绝对的电平控制是没有必要的，所以本库将建立一个收发数据 1ms 延迟切换的机制。
+
+# 🤔如何使用
+
+建议直接参考 [在stm32的示例](/Example/stm32H743/h7_main.c)
+
+首先给库的对象变量预分配足够的内存空间。注意，这个内存空间提供给发送以及接收，而且需要双份。
+
+```c
+// 建议4字节对齐，否则 DMA 可能存在问题
+#define T_LEN_MAX 256
+#define R_LEN_MAX 256
+/* 预分配内存区 */
+uint8_t MEM[T_LEN_MAX * 2 + R_LEN_MAX * 2] __attribute__((aligned(4)));
+```
+
+创建库对象变量，以及其使用的回调绑定变量。在这里，如果 .SendBefor 以及 .SendOver 绑定为 **NULL** ，那么将没有半双工通道切换的支持，没有延迟状态机的判断，仅有 DMA 的逻辑，也会稍微增强性能。
+
+```c
+/* Dataflow对象*/
+_DFlow                  DFlow;
+_DFLOW_COMMON_FUNCTION  DFlowFunc = {
+    .Transmit         = Transmit485, 
+    .Receive          = Receive485,
+    .TransmitGetState = TransmitGetState485,
+    .SendBefor        = SendBefor485,
+    .SendOver         = SendOver485};
+```
+
+程序中进行对象的初始化
+
+```c
+    DFlow_Init(&DFlow, MEM, T_LEN_MAX, R_LEN_MAX, &DFlowFunc);
+```
+
+周期性地调用库 tick ，针对某个对象，如果有多个对象请一一调用。
+
+```c
+while(1)
+{
+    DFlow_Ticks(&DFlow);
+    HAL_Delay(1);
+}
+```
+在合适的中断处理，引向合适的库处理。详见示例。
+
+>**发送结束中断**:  DFlow_Interrupt_TC(&DFlow);
+>
+>**空闲中断 & 接收结束中断**: DFlow_Interrupt_IDLE_RC(&DFlow, Size);
+
+然后就可以在程序任何地方随意地调用发送和接收啦
+
+```c
+//发送
+DFlow_Write(&DFlow, "Hello3\n", sizeof("Hello3\n"));
+//接收
+while(DFlow_Getc(&DFlow, &data) == DFLOW_API_RETURN_DEFAULT)
+{
+
+}
+```
+
+
 
 # 各设计
 
