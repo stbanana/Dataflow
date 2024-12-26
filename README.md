@@ -2,6 +2,12 @@
  <h1 align="center">Dataflow</h1>
  <p align="center">一个流式数据的驱动中间件</p>
 </p>
+
+<p align="center">
+    <a href="https://github.com/anuraghazra/github-readme-stats/graphs/contributors"><img alt="C" src="https://img.shields.io/badge/C-00599C.svg?logo=c&logoColor=white" /></a>
+    <a href="https://www.gnu.org/licenses/gpl-3.0.en.html"><img alt="Static Badge" src="https://img.shields.io/badge/license%20-%20GPL%203.0%20-%20blue" /></a>
+</p>
+
 <p align="center">
     <a href="https://wiki.yono233.cn/Dataflow/zh_hans/">文档</a>
 </p>
@@ -12,7 +18,7 @@
     <a href="/Example/README.DATA/README_EN.md">English</a>
 </p>
 
-# 作用
+# 💉作用
 期望帮助那些管理不好以下两项的小白，符合任何一项都可以使用本库解决。
 
 >传输流的 DMA。
@@ -25,14 +31,14 @@
 
 一个典型的应用场景是，串口的 RS485 通信。
 
-# 副作用
+# 🩼副作用
 >**延迟**: 会带来收发数据 1~2ms 的额外延迟，主要是确保切换半双工方向的稳定性。
 >
 >**资源**: 会加倍 RAM 空间的消耗。
 
 对于小白而言，这不算什么。
 
-# 思考方向
+# 🧺思考方向
 
 或者仅参考思路来优化自己的程序。本库仅是以下思路的一个实践，或许带有作者的个人偏见。
 
