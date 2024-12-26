@@ -116,7 +116,7 @@ void DataflowTest(void)
         {
             DFlow_Writec(&DFlow, data);
         }
-        HAL_Delay(1);
+        HAL_Delay(0);
     }
 }
 

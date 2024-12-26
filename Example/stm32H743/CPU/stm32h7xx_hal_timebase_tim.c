@@ -90,7 +90,7 @@ HAL_StatusTypeDef HAL_InitTick(uint32_t TickPriority)
   + ClockDivision = 0
   + Counter direction = Up
   */
-    htim6.Init.Period        = (500000U / 1000U) - 1U;
+    htim6.Init.Period        = (1000000U / 1000U) - 1U;
     htim6.Init.Prescaler     = uwPrescalerValue;
     htim6.Init.ClockDivision = 0;
     htim6.Init.CounterMode   = TIM_COUNTERMODE_UP;
