@@ -75,7 +75,7 @@ DMA 接收是非常简单且易用的，但是发送的设计却比较复杂，�
 #define T_LEN_MAX 256
 #define R_LEN_MAX 256
 /* 预分配内存区 */
-uint8_t MEM[T_LEN_MAX * 2 + R_LEN_MAX * 2] __attribute__((aligned(4)));
+uint8_t MEM[T_LEN_MAX * 2 + R_LEN_MAX * 2] __ALIGNED(32);
 ```
 
 创建库对象变量，以及其使用的回调绑定变量。在这里，如果 .SendBefor 以及 .SendOver 绑定为 **NULL** ，那么将没有半双工通道切换的支持，没有延迟状态机的判断，仅有 DMA 的逻辑，也会稍微增强性能。
@@ -110,7 +110,7 @@ while(1)
 
 >**发送结束中断**:  DFlow_Interrupt_TC(&DFlow);
 >
->**空闲中断 & 接收结束中断**: DFlow_Interrupt_IDLE_RC(&DFlow, Size);
+>**空闲中断 & 接收结束中断 &原教旨DMA FTF中断(非hal)**: DFlow_Interrupt_IDLE_RC_FTF(&DFlow, Size);
 
 然后就可以在程序任何地方随意地调用发送和接收啦
 

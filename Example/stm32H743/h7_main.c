@@ -32,7 +32,7 @@ extern DMA_HandleTypeDef  hdma_uart4_tx;
 extern DMA_HandleTypeDef  hdma_uart4_rx;
 
 /* 预分配内存区 */
-uint8_t MEM[T_LEN_MAX * 2 + R_LEN_MAX * 2] __attribute__((aligned(4)));
+uint8_t MEM[T_LEN_MAX * 2 + R_LEN_MAX * 2] __ALIGNED(32);
 /* Private Constants ---------------------------------------------------------*/
 /* Private function prototypes -----------------------------------------------*/
 
@@ -187,10 +187,10 @@ void HAL_UARTEx_RxEventCallback(UART_HandleTypeDef *huart, uint16_t Size)
         switch(huart->RxEventType)
         {
         case HAL_UART_RXEVENT_IDLE:
-            DFlow_Interrupt_IDLE_RC(&DFlow, Size);
+            DFlow_Interrupt_IDLE_RC_FTF(&DFlow, Size);
             break;
         case HAL_UART_RXEVENT_TC: // 接收通道结束，程序运行不应当进入此分支，表明接收buffer已经不够大了
-            DFlow_Interrupt_IDLE_RC(&DFlow, Size);
+            DFlow_Interrupt_IDLE_RC_FTF(&DFlow, Size);
             break;
 
         default:

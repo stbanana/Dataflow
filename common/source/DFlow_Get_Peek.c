@@ -5,7 +5,7 @@
  **** All rights reserved                                       ****
 
  ********************************************************************************
- * File Name     : DFlow_Write.c
+ * File Name     : DFlow_Get_Peek.c
  * Author        : yono
  * Date          : 2024-12-24
  * Version       : 1.0
@@ -24,37 +24,15 @@
 /* Private functions ---------------------------------------------------------*/
 
 /**
- * @brief 发送API
+ * @brief 查询接收buffer是否为空
  * @param df Dataflow对象指针
- * @param pcBuf 期望发送的数据buffer头
- * @param ui32Len 期望发送的数据长度
  * @return 标准返回
  */
-uint32_t DFlow_Write(_DFlow *df, uint8_t *pcBuf, uint32_t ui32Len)
+uint32_t DFlow_Get_Peek(_DFlow *df)
 {
-    /* 依据发送ABbuffer，注册变量 */
-    uint8_t  *pSBuffer;
-    uint16_t *pSBufferLen;
-    if(df->SendAB & 0x1)
-    {
-        pSBuffer    = (uint8_t *)df->TxExist.BufferA;
-        pSBufferLen = &df->TxExist.LenA;
-    }
-    else if(df->SendAB & 0x2)
-    {
-        pSBuffer    = (uint8_t *)df->TxExist.BufferB;
-        pSBufferLen = &df->TxExist.LenB;
-    }
-
-    /* 审查buffer剩余 */
-    if(df->TxExist.LenMAX < (*pSBufferLen + ui32Len))
-        return DFLOW_API_RETURN_BUFFER_FULL;
-
-    for(uint32_t i = 0; i < ui32Len; i++)
-    {
-        pSBuffer[*pSBufferLen + i] = pcBuf[i];
-    }
-    *pSBufferLen += ui32Len;
+    /* 审查buffer是否为空 */
+    if(df->RxExist.UserRxReadIndex == df->RxExist.UserRxWriteIndex)
+        return DFLOW_API_RETURN_BUFFER_EMPTY;
 
     return DFLOW_API_RETURN_DEFAULT;
 }

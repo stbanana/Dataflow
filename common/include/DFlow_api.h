@@ -101,9 +101,10 @@ extern uint32_t DFlow_Init(_DFlow *df, void *AllBuffer, uint32_t TBufferLen, uin
 extern uint32_t DFlow_Write(_DFlow *df, uint8_t *pcBuf, uint32_t ui32Len);
 extern uint32_t DFlow_Writec(_DFlow *df, uint8_t data);
 extern uint32_t DFlow_Getc(_DFlow *df, uint8_t *data_rx);
+extern uint32_t DFlow_Get_Peek(_DFlow *df);
 
 /***** 自行插入中断处理 *****/
-extern void DFlow_Interrupt_IDLE_RC(_DFlow *df, uint16_t Size);
+extern void DFlow_Interrupt_IDLE_RC_FTF(_DFlow *df, uint16_t Size);
 extern void DFlow_Interrupt_TC(_DFlow *df);
 
 /* Include DFlow utility and system file.  */

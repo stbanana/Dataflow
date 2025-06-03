@@ -31,7 +31,7 @@
  * @param df Dataflow对象指针
  * @param Size 可用的读数据字节数
  */
-void DFlow_Interrupt_IDLE_RC(_DFlow *df, uint16_t Size)
+void DFlow_Interrupt_IDLE_RC_FTF(_DFlow *df, uint16_t Size)
 {
     df->RxExist.Len = Size;
     while(df->RxExist.Len > 0)
