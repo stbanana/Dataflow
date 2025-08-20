@@ -8,7 +8,7 @@
         "files.associations": {
             "*.sct": "arm",
             "stm32h7xx_hal.h": "c",
-            "dflow_api.h": "c",
+            "DFlow.h": "c",
             "dflow_port.h": "c"
         }
     },

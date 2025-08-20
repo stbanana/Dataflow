@@ -4,7 +4,7 @@
  */
 
 /**
- * @file DFlow_api.h
+ * @file DFlow.h
  *     Dataflow Component
  *     Application Interface (API)
  */
