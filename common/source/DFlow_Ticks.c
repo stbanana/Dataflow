@@ -33,8 +33,8 @@
 void DFlow_Ticks(_DFlow *df)
 {
     /* 依据发送ABbuffer，注册变量 */
-    volatile uint8_t *pSBuffer;
-    uint16_t         *pSBufferLen;
+    volatile uint8_t *pSBuffer    = df->TxExist.BufferA;
+    uint16_t         *pSBufferLen = &df->TxExist.LenA;
     if(df->SendAB & 0x1)
     {
         pSBuffer    = df->TxExist.BufferA;

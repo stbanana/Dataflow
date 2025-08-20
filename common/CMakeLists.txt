@@ -8,7 +8,6 @@ file(GLOB_RECURSE SRC ${CMAKE_CURRENT_LIST_DIR}/source/*.c)
 
 target_include_directories(Dataflow INTERFACE
     ${CMAKE_CURRENT_LIST_DIR}/include
-    ${CMAKE_CURRENT_LIST_DIR}/../port/generic/inc
 )
 
 target_sources(Dataflow INTERFACE
