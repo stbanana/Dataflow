@@ -71,6 +71,20 @@ void DFlow_Ticks(_DFlow *df)
         default:
             break;
         }
+        /* 保险机制，避免总线抢占导致卡在发送态 */
+        if(*pSBufferLen == 0 // 无发送数据且空闲
+           && df->Func->TransmitGetState( ) == DFLOW_PORT_RETURN_DEFAULT)
+        {
+            if(df->IdleTicks++ > 20)
+            {
+                df->Func->SendOver( );
+                df->IdleTicks = 0;
+            }
+        }
+        else
+        {
+            df->IdleTicks = 0;
+        }
     }
 
     if(*pSBufferLen > 0 &&                                         // 待发送有数据

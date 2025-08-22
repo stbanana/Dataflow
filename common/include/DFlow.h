@@ -83,8 +83,9 @@ typedef struct
 typedef struct _DFlow
 {
     /* 初始化时需赋固定值的部分 */
-    uint8_t State;  // 0:空闲态.触发回调，流转发送 1:发送结束，触发回调流转空闲 2:发送，发数据，中断流转发送结束 3:接收，开启接收通道失败会在此重开
-    uint8_t SendAB; // 0x1:使用Abuffer发送 0x2:使用Bbuffer发送
+    uint8_t State;     // 0:空闲态.触发回调，流转发送 1:发送结束，触发回调流转空闲 2:发送，发数据，中断流转发送结束 3:接收，开启接收通道失败会在此重开
+    uint8_t SendAB;    // 0x1:使用Abuffer发送 0x2:使用Bbuffer发送
+    uint8_t IdleTicks; // 空闲ticks计数器，单位1ms
     /* 需传入初始化函数进行配置的部分 */
     _DFLOW_TX_EXIST         TxExist; // 供发送的buffer空间
     _DFLOW_RX_EXIST         RxExist; // 供接收的buffer空间

@@ -49,9 +49,10 @@ uint32_t DFlow_Init(_DFlow *df, void *AllBuffer, uint32_t TBufferLen, uint32_t R
         return DFLOW_API_RETURN_ERR_PARAM;
     }
 
-    df->State  = 0;
-    df->SendAB = 0x1;
-    df->Func   = Func;
+    df->State     = 0;
+    df->SendAB    = 0x1;
+    df->IdleTicks = 0;
+    df->Func      = Func;
 
     /* 分段分配内存 */
     df->TxExist.BufferA = dist;
